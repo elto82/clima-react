@@ -2,11 +2,7 @@ import "materialize-css/dist/css/materialize.min.css";
 import M from "materialize-css";
 import { useEffect, useState } from "react";
 
-const Formulario = () => {
-  const [busqueda, setBusqueda] = useState({
-    ciudad: "",
-    pais: "",
-  });
+const Formulario = ({ busqueda, setBusqueda, setConsultar }) => {
   const [error, setError] = useState(false);
 
   const { ciudad, pais } = busqueda;
@@ -29,6 +25,8 @@ const Formulario = () => {
       return;
     }
     setError(false);
+
+    setConsultar(true);
   };
 
   return (
