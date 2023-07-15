@@ -7,6 +7,7 @@ const Formulario = () => {
     ciudad: "",
     pais: "",
   });
+  const [error, setError] = useState(false);
 
   const { ciudad, pais } = busqueda;
 
@@ -21,8 +22,20 @@ const Formulario = () => {
     });
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (ciudad.trim() === "" || pais.trim() === "") {
+      setError(true);
+      return;
+    }
+    setError(false);
+  };
+
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
+      {error && (
+        <p className="red  center error">Todos los campos son obligatorios</p>
+      )}
       <div className="input-field col s12">
         <input
           type="text"
@@ -45,6 +58,13 @@ const Formulario = () => {
           <option value="PE">Perú</option>
         </select>
         <label htmlFor="pais">Pais:</label>
+      </div>
+      <div className="input-field col s12">
+        <input
+          type="submit"
+          value="Buscar"
+          className="waves-effect waves-light btn-large btn-block  green accent-3"
+        />
       </div>
     </form>
   );
