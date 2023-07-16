@@ -4,8 +4,8 @@ import Header from "./components/Header";
 import Clima from "./components/Clima";
 import Error from "./components/Error";
 
-const API_URL = import.meta.env.VITE_API_URL;
-const API_KEY = import.meta.env.VITE_API_KEY;
+const API_KEY = "0206fce03e7df769a6c64eb3f6d1ebfb";
+const API_URL = "https://api.openweathermap.org/data/2.5/weather?q=";
 
 const App = () => {
   const [busqueda, setBusqueda] = useState({
