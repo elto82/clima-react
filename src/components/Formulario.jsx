@@ -1,15 +1,36 @@
 import "materialize-css/dist/css/materialize.min.css";
 import M from "materialize-css";
 import { useEffect, useState } from "react";
+import Error from "./Error";
 
 const Formulario = ({ busqueda, setBusqueda, setConsultar }) => {
   const [error, setError] = useState(false);
+  const [listaPaises, setListaPaises] = useState([]);
 
   const { ciudad, pais } = busqueda;
 
   useEffect(() => {
-    M.AutoInit();
+    obtenerPaises();
   }, []);
+
+  useEffect(() => {
+    M.AutoInit();
+  }, [listaPaises]);
+
+  const obtenerPaises = async () => {
+    try {
+      const response = await fetch("https://restcountries.com/v3.1/all");
+      const data = await response.json();
+      const paises = Object.values(data).map((pais) => ({
+        codigo: pais.cca2,
+        nombre: pais.name.common,
+      }));
+      paises.sort((a, b) => a.nombre.localeCompare(b.nombre));
+      setListaPaises(paises);
+    } catch (error) {
+      setError(true);
+    }
+  };
 
   const handleChange = (e) => {
     setBusqueda({
@@ -31,9 +52,7 @@ const Formulario = ({ busqueda, setBusqueda, setConsultar }) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      {error && (
-        <p className="red  center error">Todos los campos son obligatorios</p>
-      )}
+      {error && <Error mensaje="Todos los campos son obligatorios" />}
       <div className="input-field col s12">
         <input
           type="text"
@@ -47,21 +66,19 @@ const Formulario = ({ busqueda, setBusqueda, setConsultar }) => {
       <div className="input-field col s12">
         <select name="pais" id="pais" value={pais} onChange={handleChange}>
           <option value="">-- Seleccione un país --</option>
-          <option value="US">Estados Unidos</option>
-          <option value="MX">México</option>
-          <option value="AR">Argentina</option>
-          <option value="CO">Colombia</option>
-          <option value="CR">Costa Rica</option>
-          <option value="ES">España</option>
-          <option value="PE">Perú</option>
+          {listaPaises.map((pais) => (
+            <option key={pais.codigo} value={pais.codigo}>
+              {pais.nombre}
+            </option>
+          ))}
         </select>
-        <label htmlFor="pais">Pais:</label>
+        <label htmlFor="pais">País:</label>
       </div>
       <div className="input-field col s12">
         <input
           type="submit"
           value="Buscar"
-          className="waves-effect waves-light btn-large btn-block  green accent-3"
+          className="waves-effect waves-light btn-large btn-block green accent-3"
         />
       </div>
     </form>
